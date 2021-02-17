@@ -31,8 +31,8 @@ export default class HelloWorld {
 
 	// SCOREBOARD FUNCTIONS
 	private removeUserFromScoreboard(user: MRE.User){
-		this.scores.players.forEach((user, index) =>{
-			if(user === user) this.scores.players.splice(index, 1);
+		this.scores.players.forEach((player, index) =>{
+			if(player.user === user) this.scores.players.splice(index, 1);
 		});
 		this.refreshScoreboard();
 	}
@@ -53,6 +53,7 @@ export default class HelloWorld {
 	}
 
 	// GAMEPLAY FUNCTIONS
+	// (CALL WHEN PLAYER HITS BALL)
 	private addScoreToUser(user: MRE.User){
 		this.scores.players.forEach((player, index) =>{
 			if(player.user === user) player.addPointToHole(player.currLevel);
@@ -60,6 +61,7 @@ export default class HelloWorld {
 		this.refreshScoreboard();
 	}
 
+	// (CALL WHEN PLAYER HITS BALL INTO HOLE!!!)
 	private score(user: MRE.User){
 		this.scores.players.find(player => player.user.id === user.id).scoreGoal();
 		this.refreshScoreboard();
@@ -92,10 +94,10 @@ export default class HelloWorld {
 			}
 		});
 
-		// Create menu button mesh
+		// CREATE MENU BUTTON MESH (text does not have a collider sadge)
 		const buttonMesh = this.assets.createBoxMesh('button', 0.3, 0.3, 0.01);
 
-		// BUTTONS
+		// DEBUG BUTTONS - REMOVE WHEN ACTUAL GAME EXISTS
 		this.debugButtonIncreaseHit = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'Text',
