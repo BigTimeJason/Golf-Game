@@ -119,22 +119,22 @@ export default class HelloWorld {
 		const resetAllButtonBehaviour = this.debugButtonResetAll.setBehavior(MRE.ButtonBehavior);
 
 		increaseHitButtonBehaviour.onClick(user =>{
-			this.scores.players.forEach((user, index) =>{
-				if(user === user) user.addPointToHole(user.currLevel);
+			this.scores.players.forEach((player, index) =>{
+				if(player.user === user) player.addPointToHole(player.currLevel);
 			});
 			this.refreshScoreboard();
 		});
 
 		increaseLevelButtonBehaviour.onClick(user =>{
-			this.scores.players.forEach((user, index) =>{
-				if(user === user) user.currLevel += 1;
+			this.scores.players.forEach((player, index) =>{
+				if(player.user === user) player.currLevel += 1;
 			});
 			this.refreshScoreboard();
 		});
 
 		resetAllButtonBehaviour.onClick(user =>{
-			this.scores.players.forEach((user, index) =>{
-				if(user === user) user.resetScores();
+			this.scores.players.forEach((player, index) =>{
+				if(player.user === user) player.resetScores();
 			});
 			this.refreshScoreboard();
 		});
