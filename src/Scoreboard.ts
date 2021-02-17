@@ -7,11 +7,6 @@ export interface ScoreboardInterface{
     players: Player[];
 }
 
-export interface HoleInterface{
-    //holeName: string;
-    score: number;
-}
-
 // class Scoreboard{
 //     public boom: IScoreboard = {players: [{name: "jason", score: [{courseName: "big golf", score: 2}]}]}
 // }

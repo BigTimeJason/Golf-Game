@@ -1,16 +1,25 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
-import {HoleInterface} from ".";
 
 export class Player{
     public user: MRE.User;
-    public score: HoleInterface[];
+    public scores: number[];
+    public currLevel: number;
 
     public constructor(user: MRE.User){
         this.user = user;
-        this.score = [];
+        this.scores = [];
+        this.currLevel = 0;
     }
 
     addPointToHole(holeNumber: number){
-        this.score[holeNumber].score += 1
+        if(this.scores.length <= holeNumber){
+            this.scores.push(0);
+        }
+        this.scores[holeNumber] += 1
+    }
+
+    resetScores(){
+        this.scores = [];
+        this.currLevel = 0;
     }
 }

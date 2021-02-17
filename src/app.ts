@@ -12,9 +12,15 @@ import { ScoreboardInterface, Player } from '.';
  * The main class of this app. All the logic goes here.
  */
 export default class HelloWorld {
-	private text: MRE.Actor = null;
-	private ball: MRE.Actor[] = [];
 	private assets: MRE.AssetContainer;
+	
+	private scoreText: MRE.Actor = null;
+
+	private debugButtonIncreaseLevel: MRE.Actor = null;
+	private debugButtonIncreaseHit: MRE.Actor = null;
+	private debugButtonResetAll: MRE.Actor = null;
+
+	private balls: MRE.Actor[] = [];
 	private scores: ScoreboardInterface = {players: []};
 
 	constructor(private context: MRE.Context) {
@@ -41,24 +47,20 @@ export default class HelloWorld {
 	}
 
 	private refreshScoreboard(){
-		this.text.text.contents = "Scores";
+		this.scoreText.text.contents = "Scores";
 		this.scores.players.forEach(player => {
-			this.text.text.contents += "\n" + player.user.name;
-			player.score.forEach(score => {
-				this.text.text.contents += "\t" + score;
+			this.scoreText.text.contents += "\n" + player.user.name;
+			player.scores.forEach(score => {
+				this.scoreText.text.contents += " " + score;
 			});
 		});
 	}
 
-	/**
-	 * Once the context is "started", initialize the app.
-	 */
 	private async started() {
 		// set up somewhere to store loaded assets (meshes, textures, animations, gltfs, etc.)
 		this.assets = new MRE.AssetContainer(this.context);
 
-		// Create a new actor with no mesh, but some text.
-		this.text = MRE.Actor.Create(this.context, {
+		this.scoreText = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'Text',
 				transform: {
@@ -69,33 +71,92 @@ export default class HelloWorld {
 					anchor: MRE.TextAnchorLocation.MiddleCenter,
 					color: { r: 30 / 255, g: 206 / 255, b: 213 / 255 },
 					height: 0.3
-				}				
-				// attachment: {
-				// 	attachPoint: 'head',
-				// 	userId: user.id
-				// }
-			}
-		});
-
-				
-		// Load a glTF model before we use it
-		const cubeData = await this.assets.loadGltf('altspace-cube.glb', "box");
-
-		// spawn a copy of the glTF model
-		this.ball[0] = MRE.Actor.CreateFromPrefab(this.context, {
-			// using the data we loaded earlier
-			firstPrefabFrom: cubeData,
-			// Also apply the following generic actor properties.
-			actor: {
-				name: 'Altspace Cube',
-				// Parent the glTF model to the text actor, so the transform is relative to the text
-				transform: {
-					local: {
-						position: { x: 0, y: -1, z: 0 },
-						scale: { x: 0.4, y: 0.4, z: 0.4 }
-					}
 				}
 			}
 		});
+
+		// Create menu button
+		const buttonMesh = this.assets.createBoxMesh('button', 0.3, 0.3, 0.01);
+
+		this.debugButtonIncreaseHit = MRE.Actor.Create(this.context, {
+			actor: {
+				name: 'Text',
+				transform: {
+					app: { position: { x: 0, y: 1, z: -1 } }
+				},
+				appearance: { meshId: buttonMesh.id },
+
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
+			}
+		});
+
+		this.debugButtonIncreaseLevel = MRE.Actor.Create(this.context, {
+			actor: {
+				name: 'Text',
+				transform: {
+					app: { position: { x: 0, y: 0, z: -1 } }
+				},
+				appearance: { meshId: buttonMesh.id },
+
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
+			}
+		});
+
+		this.debugButtonResetAll = MRE.Actor.Create(this.context, {
+			actor: {
+				name: 'Text',
+				transform: {
+					app: { position: { x: 0, y: -1, z: -1 } }
+				},
+				appearance: { meshId: buttonMesh.id },
+
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
+			}
+		});
+
+		const increaseHitButtonBehaviour = this.debugButtonIncreaseHit.setBehavior(MRE.ButtonBehavior);
+		const increaseLevelButtonBehaviour = this.debugButtonIncreaseLevel.setBehavior(MRE.ButtonBehavior);
+		const resetAllButtonBehaviour = this.debugButtonResetAll.setBehavior(MRE.ButtonBehavior);
+
+		increaseHitButtonBehaviour.onClick(user =>{
+			this.scores.players.forEach((user, index) =>{
+				if(user === user) user.addPointToHole(user.currLevel);
+			});
+			this.refreshScoreboard();
+		});
+
+		increaseLevelButtonBehaviour.onClick(user =>{
+			this.scores.players.forEach((user, index) =>{
+				if(user === user) user.currLevel += 1;
+			});
+			this.refreshScoreboard();
+		});
+
+		resetAllButtonBehaviour.onClick(user =>{
+			this.scores.players.forEach((user, index) =>{
+				if(user === user) user.resetScores();
+			});
+			this.refreshScoreboard();
+		});
+
+		// Load a glTF model before we use it
+		const cubeData = await this.assets.loadGltf('altspace-cube.glb', "box");
+
+		// // spawn a copy of the glTF model
+		// this.balls[0] = MRE.Actor.CreateFromPrefab(this.context, {
+		// 	// using the data we loaded earlier
+		// 	firstPrefabFrom: cubeData,
+		// 	// Also apply the following generic actor properties.
+		// 	actor: {
+		// 		name: 'Altspace Cube',
+		// 		// Parent the glTF model to the text actor, so the transform is relative to the text
+		// 		transform: {
+		// 			local: {
+		// 				position: { x: 0, y: -1, z: 0 },
+		// 				scale: { x: 0.4, y: 0.4, z: 0.4 }
+		// 			}
+		// 		}
+		// 	}
+		// });
 	}
 }
