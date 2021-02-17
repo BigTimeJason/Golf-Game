@@ -29,6 +29,7 @@ export default class HelloWorld {
 		this.context.onUserLeft(user => this.removeUserFromScoreboard(user));
 	}
 
+	// SCOREBOARD FUNCTIONS
 	private removeUserFromScoreboard(user: MRE.User){
 		this.scores.players.forEach((user, index) =>{
 			if(user === user) this.scores.players.splice(index, 1);
@@ -38,11 +39,6 @@ export default class HelloWorld {
 
 	private addUserToScoreboard(user: MRE.User) {
 		this.scores.players.push(new Player(user));
-		this.refreshScoreboard();
-	}
-
-	private addScoreToUser(user: MRE.User, holeNumber: number){
-		this.scores.players.find(player => player.user.id === user.id).addPointToHole(holeNumber);		
 		this.refreshScoreboard();
 	}
 
@@ -56,10 +52,31 @@ export default class HelloWorld {
 		});
 	}
 
+	// GAMEPLAY FUNCTIONS
+	private addScoreToUser(user: MRE.User){
+		this.scores.players.forEach((player, index) =>{
+			if(player.user === user) player.addPointToHole(player.currLevel);
+		});
+		this.refreshScoreboard();
+	}
+
+	private score(user: MRE.User){
+		this.scores.players.find(player => player.user.id === user.id).scoreGoal();
+		this.refreshScoreboard();
+	}
+
+	// DEBUGGING
+	private resetAllScoresForUser(user: MRE.User){
+		this.scores.players.find(player => player.user.id === user.id).resetScores();		
+		this.refreshScoreboard();
+	}
+
 	private async started() {
-		// set up somewhere to store loaded assets (meshes, textures, animations, gltfs, etc.)
+
+		// Set up somewhere to store loaded assets (meshes, textures, animations, gltfs, etc.)
 		this.assets = new MRE.AssetContainer(this.context);
 
+		// Create initial scoresheet
 		this.scoreText = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'Text',
@@ -75,9 +92,10 @@ export default class HelloWorld {
 			}
 		});
 
-		// Create menu button
+		// Create menu button mesh
 		const buttonMesh = this.assets.createBoxMesh('button', 0.3, 0.3, 0.01);
 
+		// BUTTONS
 		this.debugButtonIncreaseHit = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'Text',
@@ -114,49 +132,27 @@ export default class HelloWorld {
 			}
 		});
 
+		// BUTTON BEHAVIOUR
 		const increaseHitButtonBehaviour = this.debugButtonIncreaseHit.setBehavior(MRE.ButtonBehavior);
 		const increaseLevelButtonBehaviour = this.debugButtonIncreaseLevel.setBehavior(MRE.ButtonBehavior);
 		const resetAllButtonBehaviour = this.debugButtonResetAll.setBehavior(MRE.ButtonBehavior);
 
 		increaseHitButtonBehaviour.onClick(user =>{
-			this.scores.players.forEach((player, index) =>{
-				if(player.user === user) player.addPointToHole(player.currLevel);
-			});
+			this.addScoreToUser(user);
 			this.refreshScoreboard();
 		});
 
 		increaseLevelButtonBehaviour.onClick(user =>{
-			this.scores.players.forEach((player, index) =>{
-				if(player.user === user) player.currLevel += 1;
-			});
+			this.score(user);
 			this.refreshScoreboard();
 		});
 
 		resetAllButtonBehaviour.onClick(user =>{
-			this.scores.players.forEach((player, index) =>{
-				if(player.user === user) player.resetScores();
-			});
+			this.resetAllScoresForUser(user);
 			this.refreshScoreboard();
 		});
 
 		// Load a glTF model before we use it
 		const cubeData = await this.assets.loadGltf('altspace-cube.glb', "box");
-
-		// // spawn a copy of the glTF model
-		// this.balls[0] = MRE.Actor.CreateFromPrefab(this.context, {
-		// 	// using the data we loaded earlier
-		// 	firstPrefabFrom: cubeData,
-		// 	// Also apply the following generic actor properties.
-		// 	actor: {
-		// 		name: 'Altspace Cube',
-		// 		// Parent the glTF model to the text actor, so the transform is relative to the text
-		// 		transform: {
-		// 			local: {
-		// 				position: { x: 0, y: -1, z: 0 },
-		// 				scale: { x: 0.4, y: 0.4, z: 0.4 }
-		// 			}
-		// 		}
-		// 	}
-		// });
 	}
 }

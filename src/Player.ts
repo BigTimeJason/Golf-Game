@@ -18,6 +18,13 @@ export class Player{
         this.scores[holeNumber] += 1
     }
 
+    scoreGoal(){
+        this.currLevel += 1;
+        if(this.scores.length <= this.currLevel){
+            this.scores.push(0);
+        }
+    }
+
     resetScores(){
         this.scores = [];
         this.currLevel = 0;
