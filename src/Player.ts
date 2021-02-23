@@ -29,4 +29,8 @@ export class Player{
         this.scores = [];
         this.currLevel = 0;
     }
+
+    resetCurrentScore(){
+        this.scores[this.currLevel] = 0;
+    }
 }
