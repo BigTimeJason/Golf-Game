@@ -65,7 +65,7 @@ export default class GolfScoreboard {
 	// GAMEPLAY FUNCTIONS
 	// (CALL WHEN PLAYER HITS BALL)
 	private addScoreToUser(user: MRE.User){
-		this.scores.players.forEach((player, index) =>{
+		this.scores.players.forEach((player) =>{
 			if(player.user === user) player.addPointToHole(player.currLevel);
 		});
 		this.refreshScoreboard();
@@ -215,7 +215,7 @@ export default class GolfScoreboard {
 			}
 		});
 
-		this.resetAllButton = MRE.Actor.Create(this.context, {
+		this.resetCurrentButton = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'Text',
 				transform: {

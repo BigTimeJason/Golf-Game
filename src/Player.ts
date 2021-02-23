@@ -31,6 +31,8 @@ export class Player{
     }
 
     resetCurrentScore(){
-        this.scores[this.currLevel] = 0;
+        if(this.scores.length > 0){
+            this.scores[this.currLevel] = 0;
+        }
     }
 }
