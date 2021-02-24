@@ -59,6 +59,7 @@ export default class GolfScoreboard {
 			player.scores.forEach(score => {
 				this.scoreText.text.contents += " " + score;
 			});
+			this.scoreText.text.contents += " [" + player.totalScore + "]";
 		});
 	}
 

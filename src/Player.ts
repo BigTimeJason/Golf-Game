@@ -4,11 +4,13 @@ export class Player{
     public user: MRE.User;
     public scores: number[];
     public currLevel: number;
+    public totalScore: number;
 
     public constructor(user: MRE.User){
         this.user = user;
         this.scores = [];
         this.currLevel = 0;
+        this.totalScore = 0;
     }
 
     addPointToHole(holeNumber: number){
@@ -16,6 +18,7 @@ export class Player{
             this.scores.push(0);
         }
         this.scores[holeNumber] += 1
+        this.totalScore +=1
     }
 
     scoreGoal(){
@@ -28,9 +31,11 @@ export class Player{
     resetScores(){
         this.scores = [];
         this.currLevel = 0;
+        this.totalScore = 0;
     }
 
     resetCurrentScore(){
+        this.totalScore -= this.scores[this.currLevel];
         if(this.scores.length > 0){
             this.scores[this.currLevel] = 0;
         }
