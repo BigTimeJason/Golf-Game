@@ -15,6 +15,7 @@ export default class GolfScoreboard {
 	private assets: MRE.AssetContainer;
 	
 	private scoreText: MRE.Actor = null;
+	private playersList: MRE.Actor = null;
 
 	private increaseLevelButton: MRE.Actor = null;
 	private increaseHitButton: MRE.Actor = null;
@@ -53,9 +54,11 @@ export default class GolfScoreboard {
 	}
 
 	private refreshScoreboard(){
+		this.playersList.text.contents = "Players";
 		this.scoreText.text.contents = "Scores";
 		this.scores.players.forEach(player => {
-			this.scoreText.text.contents += "\n" + player.user.name;
+			this.playersList.text.contents += "\n" + player.user.name;
+			this.scoreText.text.contents += "\n";
 			player.scores.forEach(score => {
 				this.scoreText.text.contents += " " + score;
 			});
@@ -98,12 +101,28 @@ export default class GolfScoreboard {
 		// Set up somewhere to store loaded assets (meshes, textures, animations, gltfs, etc.)
 		this.assets = new MRE.AssetContainer(this.context);
 
+		// LIST OF PLAYERS TEXT
+		this.playersList = MRE.Actor.Create(this.context, {
+			actor: {
+				name: 'Text',
+				transform: {
+					app: { position: { x: 0.5, y: 2, z: textZoffset } }
+				},
+				text: {
+					contents: "Players",
+					anchor: MRE.TextAnchorLocation.MiddleRight,
+					color: { r: 30 / 255, g: 206 / 255, b: 213 / 255 },
+					height: 0.3
+				}
+			}
+		});
+
 		// SCORE SHEET REPRESENTATION
 		this.scoreText = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'Text',
 				transform: {
-					app: { position: { x: 0, y: 0, z: textZoffset } }
+					app: { position: { x: 1, y: 2, z: textZoffset } }
 				},
 				text: {
 					contents: "Scores",
