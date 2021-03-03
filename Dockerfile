@@ -2,7 +2,7 @@ FROM node:10.16-alpine
 WORKDIR /opt/mre
 
 ENV PORT=80
-ENV BASE_URL=http://jasonmre.openode.io/
+ENV BASE_URL=http://jasongithubmre.openode.io/
 
 COPY package*.json ./
 RUN ["npm", "install", "--unsafe-perm"]
